@@ -19,9 +19,9 @@ class NightSim:
         self.chica_pos = "1A"
         self.current_mov_op = 1
 
-        self.two_am = 0
-        self.three_am = 0
-        self.four_am = 0
+        self.two_am = False
+        self.three_am = False
+        self.four_am = False
 
         self.bonnie_at_door = []
         self.chica_at_door = []
@@ -44,13 +44,13 @@ class NightSim:
 
     def update_ai(self):
         if (self.current_mov_op > self.MOV_OP_BEFORE_2AM):
-            self.two_am = 1
+            self.two_am = True
 
         if (self.current_mov_op > self.MOV_OP_BEFORE_3AM):
-            self.three_am = 1
+            self.three_am = True
 
         if (self.current_mov_op > self.MOV_OP_BEFORE_4AM):
-            self.four_am = 1
+            self.four_am = True
 
     def update(self):
         self.update_ai()

@@ -4,7 +4,7 @@ total_sim = 10000
 first_op = []
 
 for _ in range(total_sim):
-    x = NightSim.NightSim(22, 20)
+    x = NightSim.NightSim(20, 20)
     temp = x.simulate()
 
     if (len(temp[0]) == 0):

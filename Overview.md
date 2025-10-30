@@ -72,14 +72,105 @@ Chica does have some fun quirks that are worth noting however. I mentioned this 
 The reason Chica is included in the simulation is the exact same reason as Bonnie, so if you'd like an explanation for why, I'd encourage you to read Bonnie's. 
 
 ## Simulation Explanation
-So, we're going to simulate Bonnie and Chica, but do what with them? Here is where 
+So, we're going to simulate Bonnie and Chica, but do what with them? Here is where we need to think of exactly what information we want. We want to try and measure difficulty somehow, or at least showcase it in some way. The method I ended up going with is the notice that Bonnie and Chica are at their most difficult when they spend time at your door. My logic for this is that if they aren't at your door when you check the lights, then you don't have to do anything, but if they are there, then you'd have to shut the door to prevent death, which then drains power. Therefore, the information we want to see is when both of these goobers are at their respective doors. We can both look at what time both Bonnie and Chica show up, as well as how long they stay at the door. This will give us a rough estimate for difficulty, with the more difficult runs having Bonnie and Chica stay at the door. This isn't a perfect measure of difficulty, but I talk about that more in the Pitfalls of the Simulation section.
 
 ### Simulation Logic
 logic of the simulation
 
 ### Simulation Code
-code for the simulation
+Since we're simulating a custom night multiple times, I ended up creating a Night class which I named NightSim. This way, I could create NightSim objects to simulate one night, grab the results of the simulation data. This process can be repeated multiple times to get a large amount of data where we can actually see results. Anyway, the first part I did was create variables to store important movement opportunity values. Namely, one variable for the total movement opportunities in a night, one variable the number of movement opportunities before 2am, one variable for 3am, and one for 4am.
 
+```python
+TOTAL_MOV_OP = 107  
+MOV_OP_BEFORE_2AM = 36  
+MOV_OP_BEFORE_3AM = 53  
+MOV_OP_BEFORE_4AM = 71
+```
+
+The other static variables (technically they're not, because I coded in Python, but whatever) I created were the paths for both Bonnie and Chica. I ended up using dictionaries for this, where the key is the current position and the items in the dictionary is the new locations where that key could go to.
+
+```python
+BONNIE_PATH = {"1A": ["5", "1B"], "1B": ["5", "2A"], "5": ["1B", "2A"], "2A": ["3", "2B"], "3": ["2A", "D"], "2B": ["3", "D"], "D": ["1B", "1B"]}  
+CHICA_PATH = {"1A": ["1B", "1B"], "1B": ["7", "6"], "7": ["4A", "6"], "6": ["7", "4A"], "4A": ["1B", "4B"], "4B": ["4A", "D"], "D": ["4A", "4A"]}
+```
+
+Alright time for the constructor for this class. To start with, I had this class take in two arguments, one for Bonnie's AI value and one for Chica's AI value. This is so I could easily change the values when running the simulations later. These values are also stored in variables to be used by the object. The next segment of code puts both Bonnie and Chica in their starting position at Camera 1A, and initializes the current movement opportunity to 1 (since both Bonnie and Chica cannot move at 0.00 seconds into the night). After that, I create three more variables for whether the current movement opportunity is past 2am, 3am, and 4am, and lastly, I create two empty lists which will store the movement opportunities that Bonnie and Chica spend at the door.
+
+```python
+def __init__(self, bonnie_ai, chica_ai):  
+    self.bonnie_ai = bonnie_ai  
+    self.chica_ai = chica_ai  
+  
+    self.bonnie_pos = "1A"  
+    self.chica_pos = "1A"  
+    self.current_mov_op = 1  
+  
+    self.two_am = False  
+    self.three_am = False  
+    self.four_am = False  
+  
+    self.bonnie_at_door = []  
+    self.chica_at_door = []
+```
+
+Now that the constructor is out of the way, let's get into the class methods. I'll go over each individual one, and then talk about how they all come together to create a proper night simulation. The first method is probably the most intuitive. Namely, if Bonnie and/or Chica are currently at the door (or at position "D" in the dictionary), then append the current movement opportunity to the proper list. 
+
+```python
+def check_at_door(self):  
+    if (self.bonnie_pos == "D"):  
+        self.bonnie_at_door.append(self.current_mov_op)  
+  
+    if (self.chica_pos == "D"):  
+        self.chica_at_door.append(self.current_mov_op)
+```
+
+The next method I wanted to talk about is the method for updating the AI. As mentioned in the descriptions for Bonnie and Chica, Bonnie increases his AI value by 1 at 2am, 3am, and 4am and Chica increases her AI value by 1 at 3am and 4am. This specific method does exactly that. It checks to see if the current movement opportunity is above the cap for 2am, 3am, and 4am and then sets the respective variable to True.
+
+```python
+def update_ai(self):  
+    if (self.current_mov_op > self.MOV_OP_BEFORE_2AM):  
+        self.two_am = True  
+  
+    if (self.current_mov_op > self.MOV_OP_BEFORE_3AM):  
+        self.three_am = True  
+  
+    if (self.current_mov_op > self.MOV_OP_BEFORE_4AM):  
+        self.four_am = True
+```
+
+This next method actually calculates the next position for both Bonnie and Chica. I tried to keep it as similar to the way FNAF calculates the movement chance (mostly because I thought it would be fun). Basically, it takes the current AI value of the animatronic and adds 1 (True) if it is currently past 3am or 4am (or 2am for Bonnie) and then rolls a random number between 1 and 20 (inclusive). If this number is below the AI value (plus the 2am/3am/4am boost), then the animatronic will move, otherwise, they stay still. If the movement opportunity is successful, then the animatronic's current position is then recalculated using the dictionary mentioned before with a coin toss to determine which direction to go to (which is how the actual game determines it as well).
+
+```python
+def update_movement(self):  
+    bonnie_roll = random.randint(1, 20)  
+    if (self.bonnie_ai + self.two_am + self.three_am + self.four_am >= bonnie_roll):  
+        self.bonnie_pos = self.BONNIE_PATH[self.bonnie_pos][random.randint(0, 1)]  
+  
+    chica_roll = random.randint(1, 20)  
+    if (self.chica_ai + self.three_am + self.four_am >= chica_roll):  
+        self.chica_pos = self.CHICA_PATH[self.chica_pos][random.randint(0, 1)]
+```
+
+Those are all the methods I've created that focus on individual parts, and now we can create the main loop. My logic was to start by updating the AI at the very start. That way if the current movement opportunity is past a milestone (2am/3am/4am) then it would immediately update to the proper value. The next step was to then calculate whether the animatronic would move on the current movement opportunity, and then to calculate the new position if they succeeded. Then we check to see if the new position is at the door, and log it if so. Lastly, we update our current movement opportunity to the next one.
+
+```python
+def update(self):  
+    self.update_ai()  
+    self.update_movement()  
+    self.check_at_door()  
+    self.current_mov_op += 1
+```
+
+One last method to bring it all together! the update() method just runs one loop, and in order to simulate the entire night, we want to repeat this for a total of 107 movement opportunities. That's what this next method does. It repeats the update() method until the night is out of movement opportunities, then returns the data for when Bonnie and Chica visited the door.
+
+```python
+def simulate(self):  
+    while (self.current_mov_op <= self.TOTAL_MOV_OP):  
+        self.update()  
+    return [self.bonnie_at_door, self.chica_at_door]
+```
+
+From here we can do all sorts of fun stuff, which we'll see in the next section.
 ## Results of Simulation
 blah blah blah I need this for spacing
 
