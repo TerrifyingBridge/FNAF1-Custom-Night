@@ -1,16 +1,28 @@
+import csv
+
 import NightSim
 
-total_sim = 10000
-first_op = []
+total_sim = 1000000
+data = []
 
 for _ in range(total_sim):
-    x = NightSim.NightSim(20, 20)
-    temp = x.simulate()
+    x = NightSim.NightSim(6, 0)
+    visits = x.simulate()
 
-    if (len(temp[0]) == 0):
-        first_op.append(108)
-    else:
-        first_op.append(temp[0][0])
+    temp_row = []
 
-print(first_op)
-print(sum(first_op) / len(first_op))
+    for i in range(107):
+        if (i + 1 in visits[0]):
+            temp_row.append(1)
+        else:
+            temp_row.append(0)
+    data.append(temp_row)
+
+with open("csv_files/bonnie_visits_6.csv", "w", newline="") as csvfile:
+    header = []
+    for i in range(1, 108):
+        header.append(i)
+
+    writer = csv.writer(csvfile)
+    writer.writerow(header)
+    writer.writerows(data)
