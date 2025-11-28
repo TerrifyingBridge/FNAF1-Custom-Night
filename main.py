@@ -2,14 +2,6 @@ import NightSim
 import matplotlib.pyplot as plt
 import numpy as np
 
-total_sim = 1000000
-bonnie_data = []
-bonnie_first_visits = []
-chica_data = []
-chica_first_visits = []
-bonnie_ai = 1
-chica_ai = 0
-
 def mo_to_secs(mo, ani):
     if (ani == "b"):
         total_time = mo * 4.97
@@ -27,65 +19,86 @@ def mo_to_secs(mo, ani):
             return 1 + (total_time / 89)
     return None
 
+total_sim = 1000000
+bonnie_ai = 20
+chica_ai = 20
+
+MO = [i for i in range(1, 108)]
+bonnie_mo = []
+chica_mo = []
+for i in range(1, 108):
+    bonnie_mo.append(round(mo_to_secs(i, "b"), 2))
+    chica_mo.append(round(mo_to_secs(i, "c"), 2))
+
+bonnie_data = [0 for i in range(1, 108)]
+bonnie_first_visits = [0 for i in range(1, 108)]
+chica_data = [0 for i in range(1, 108)]
+chica_first_visits = [0 for i in range(1, 108)]
+
 for _ in range(total_sim):
     x = NightSim.NightSim(bonnie_ai, chica_ai)
     visits = x.simulate()
-    '''
+
     for time in visits[0]:
-        bonnie_data.append(time)
+        bonnie_data[time - 1] += 1
     for time in visits[1]:
-        chica_data.append(time)
-    '''
+        chica_data[time - 1] += 1
+
     if (len(visits[0]) > 0):
-        bonnie_first_visits.append(visits[0][0])
+        bonnie_first_visits[visits[0][0] - 1] += 1
     if (len(visits[1]) > 0):
-        chica_first_visits.append(visits[1][0])
+        chica_first_visits[visits[1][0] - 1] += 1
 
-
-MO = np.arange(1, 108, 1)
-bonnie_first_dist = np.zeros(len(MO))
+'''
 for i in range(len(bonnie_first_visits)):
-    bonnie_first_dist[bonnie_first_visits[i] - 1] += 1
-plt.bar(MO, bonnie_first_dist)
+    bonnie_first_visits[i] /= total_sim
+    chica_first_visits[i] /= total_sim
 
 
+plt.figure(figsize=(10,6))
+plt.figtext(0.131, 0.85, "# of Sims: " + str(total_sim), size=14)
+plt.figtext(0.13,0.8, "Chica's AI: " + str(chica_ai), size=14)
+plt.xlabel("Night Hour (0 = 12AM)", size=16)
+plt.ylabel("Relative Frequency", size=16)
+plt.ylim(0, max(chica_first_visits)*1.15)
+plt.title("Chica's First Visit Distribution", size=20)
+plt.bar(chica_mo, chica_first_visits, width=0.04)
+
+plt.figtext(0.144, 0.85, "# of Sims: " + str(total_sim), size=14)
+plt.figtext(0.13,0.8, "Bonnie's AI: " + str(bonnie_ai), size=14)
+plt.xlabel("Night Hour (0 = 12AM)", size=16)
+plt.ylabel("Relative Frequency", size=16)
+plt.ylim(0, max(bonnie_first_visits)*1.15)
+plt.title("Bonnie's First Visit Distribution", size=20)
+plt.bar(bonnie_mo, bonnie_first_visits, width=0.04)
+'''
 ################################
 ### VISIT DISTRIBUTION CODE  ###
 ################################
 
-'''
-bonnie_clean_data = np.zeros(len(my_bars))
-for time in bonnie_data:
-    bonnie_clean_data[time - 1] += 1
-bonnie_clean_data = bonnie_clean_data / total_sim
 
+for i in range(len(bonnie_data)):
+    bonnie_data[i] /= total_sim
+    chica_data[i] /= total_sim
+'''
 plt.figure(figsize=(10, 6))
 plt.figtext(0.144, 0.85, "# of Sims: " + str(total_sim), size=14)
 plt.figtext(0.13,0.8, "Bonnie's AI: " + str(bonnie_ai), size=14)
-plt.xlabel("Bonnie's MO", size=16)
+plt.xlabel("Night Hour (0 = 12AM)", size=16)
 plt.ylabel("Relative Frequency", size=16)
-plt.ylim(0, max(bonnie_clean_data)*1.15)
+plt.ylim(0, max(bonnie_data)*1.15)
 plt.title("Bonnie's MOs Spent At Door", size=20)
-plt.bar(my_bars, bonnie_clean_data)
-plt.show()
+plt.bar(bonnie_mo, bonnie_data, width=0.04)
 
-
-my_bars = np.arange(1, 108, 1)
-print(my_bars)
-
-chica_clean_data = np.zeros(len(my_bars))
-for time in chica_data:
-    chica_clean_data[time - 1] += 1
-
-chica_clean_data = chica_clean_data / total_sim
+'''
 
 plt.figure(figsize=(10, 6))
-plt.figtext(0.144, 0.85, "# of Sims: " + str(total_sim), size=14)
+plt.figtext(0.131, 0.85, "# of Sims: " + str(total_sim), size=14)
 plt.figtext(0.13,0.8, "Chica's AI: " + str(chica_ai), size=14)
-plt.xlabel("Chica's MO", size=16)
+plt.xlabel("Night Hour (0 = 12AM)", size=16)
 plt.ylabel("Relative Frequency", size=16)
-plt.ylim(0, max(chica_clean_data)*1.15)
+plt.ylim(0, max(chica_data)*1.15)
 plt.title("Chica's MOs Spent At Door", size=20)
-plt.bar(my_bars, chica_clean_data)
-'''
+plt.bar(chica_mo, chica_data, width=0.04)
+
 plt.show()
