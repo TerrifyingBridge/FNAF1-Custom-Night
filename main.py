@@ -2,7 +2,7 @@ import NightSim
 import matplotlib.pyplot as plt
 import numpy as np
 
-def mo_to_secs(mo, ani):
+def mo_to_hour(mo, ani):
     if (ani == "b"):
         total_time = mo * 4.97
         if (total_time <= 90):
@@ -20,19 +20,19 @@ def mo_to_secs(mo, ani):
     return None
 
 total_sim = 100000
-bonnie_ai = 1
-chica_ai = 20
+bonnie_ai = 0
+chica_ai = 0
+print(mo_to_hour(36, "b"))
 
 MO = [i for i in range(1, 108)]
 bonnie_mo = []
 chica_mo = []
 for i in range(1, 108):
-    bonnie_mo.append(round(mo_to_secs(i, "b"), 2))
-    chica_mo.append(round(mo_to_secs(i, "c"), 2))
+    bonnie_mo.append(round(mo_to_hour(i, "b"), 2))
+    chica_mo.append(round(mo_to_hour(i, "c"), 2))
 
 bonnie_data = [0 for i in range(1, 108)]
 bonnie_first_visits = [0 for i in range(1, 108)]
-bonnie_door_time_raw = []
 
 chica_data = [0 for i in range(1, 108)]
 chica_first_visits = [0 for i in range(1, 108)]
@@ -47,15 +47,27 @@ for i in range(21):
 
         bonnie_time_all_ai[i].append(len(visits[0]))
         chica_time_all_ai[i].append(len(visits[1]))
+'''
+plt.figure(figsize=(10, 6))
+plt.figtext(0.644, 0.85, "# of Sims: " + str(total_sim), size=14)
+plt.xlabel("AI Value", size=16)
+plt.ylabel("MOs Spent At Door", size=16)
+plt.title("Chica's Time At Door For An AI Value", size=20)
+plt.boxplot(chica_time_all_ai.values(), tick_labels=chica_time_all_ai.keys(), showmeans=True)
+for key in chica_time_all_ai:
+    print("Average Time Spent At Door For AI Of " + str(key) + ":", sum(chica_time_all_ai[key]) / len(chica_time_all_ai[key]))
+    print("Medium Time Spent At Door For AI Of " + str(key) + ":", np.median(chica_time_all_ai[key]))
 
+'''
 plt.figure(figsize=(10, 6))
 plt.figtext(0.644, 0.85, "# of Sims: " + str(total_sim), size=14)
 plt.xlabel("AI Value", size=16)
 plt.ylabel("MOs Spent At Door", size=16)
 plt.title("Bonnie's Time At Door For An AI Value", size=20)
-plt.boxplot(bonnie_time_all_ai.values(), tick_labels=bonnie_time_all_ai.keys(), showfliers=False)
+plt.boxplot(bonnie_time_all_ai.values(), tick_labels=bonnie_time_all_ai.keys(), showmeans=True)
 for key in bonnie_time_all_ai:
-    print("Average Time Spent At Door For AI Of " + str(bonnie_ai) + ":", sum(bonnie_time_all_ai[key]) / len(bonnie_time_all_ai[key]))
+    print("Average Time Spent At Door For AI Of " + str(key) + ":", sum(bonnie_time_all_ai[key]) / len(bonnie_time_all_ai[key]))
+    print("Medium Time Spent At Door For AI Of " + str(key) + ":", np.median(bonnie_time_all_ai[key]))
 
 ##############################
 ### SINGLE NIGHT SIM CODE  ###
@@ -75,8 +87,6 @@ for _ in range(total_sim):
         bonnie_first_visits[visits[0][0] - 1] += 1
     if (len(visits[1]) > 0):
         chica_first_visits[visits[1][0] - 1] += 1
-
-    bonnie_door_time_raw.append(len(visits[0]))
 '''
 ######################################
 ### FIRST VISIT DISTRIBUTION CODE  ###

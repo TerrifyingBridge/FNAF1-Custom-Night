@@ -205,13 +205,121 @@ From here we can do all sorts of fun stuff, which we'll see in the next section.
 
 ## Results of Simulation
 
-Alright there are A LOT of different information we can take from this simulation. For all of these cases, I tend to use $1,000,000$ simulations of a specific custom night. This is long enough to be mostly accurate of what we're looking at, while not spending too might time to generate each graph. The first graphs I want to look at won't directly answer our question, but I want to use them to just investigate different AI value distributions and other fun things. Later on, I'll make composition graphs of the actual problem we're investigating.
+Alright there are A LOT of different information we can take from this simulation. For most of these cases, I tend to use $1,000,000$ simulations of a specific custom night. This is long enough to be mostly accurate of what we're looking at, while not spending too might time to generate each graph. The first graphs I want to look at won't directly answer our question, but I want to use them to just investigate different AI value distributions and other fun things. Later on, I'll make composition graphs of the actual problem we're investigating.
 
 We can also make our lives a bit easier while generating and looking at each graph, but assuming the randomly generate numbers for Bonnie and Chica are independent of one another. Basically, regardless of what Chica's AI value is, the distribution of time spent at the door for Bonnie will remain the same if his AI value doesn't change (i.e. Bonnie would work the same if the night settings were Bonnie: 3, Chica 7 and Bonnie 3, Chica 20).
 
 ### Fun Graphs
 
-Some random graphs I wanted to make that don't directly relate to the problem at hand
+#### Door Visit Distribution
+The first type of graphs I want to look at is when Bonnie and Chica are even at the door. The idea behind these graphs was to create 107 bins, one for each movement opportunity, and if Bonnie or Chica was at the door on a given movement opportunity, then $1$ would be added to that specific bin. For example, say we ran a simulation where Bonnie was at the door on the 26th, 57th, and 106th movement opportunity, then we would add one to the 26th bin, 57th bin, and the 106th bin. Repeating this process $1,000,000$ gives us a distribution of when Bonnie and Chica are at the door at any one particular time. 
+
+Since the data itself is discrete, I ended up using a box plot to create these plots. It still reads like a histogram in some way as it shows a distribution over time, but is still a box plot at it's core. I also wanted to showcase how I made this graph in code, so we're all on the same page. The first step is to create a list of all the movement opportunities for both Bonnie and Chica. To do this, I created a generic MO list consisting of integers 1 through 107. From here, I created two new lists which converted each movement opportunity for Bonnie and Chica into their respective hour time in which it happens, rounded to the hundredths place (i.e. Bonnie's 36th MO is converted to ~2 am). Lastly, I create two empty lists (one for Bonnie and one for Chica) which will be the bins we store the data into.
+
+```python
+MO = [i for i in range(1, 108)]  
+bonnie_mo = []  
+chica_mo = []  
+for i in range(1, 108):  
+    bonnie_mo.append(round(mo_to_hour(i, "b"), 2))  
+    chica_mo.append(round(mo_to_hour(i, "c"), 2))
+
+bonnie_data = [0 for i in range(1, 108)]
+chica_data = [0 for i in range(1, 108)]
+```
+
+Now that we have empty lists, we need to fill them with data. Here I created a NightSim for $1,000,000$ times and stored the visit data for Bonnie and Chica into a temporary variable. I looped through the visit data for the night, and added $1$ to the bin of the movement opportunity in which Bonnie or Chica was at the door. It works out rather conveniently that the MO value lines up with $1$ more than the index of the list, which allows me to use it as an index when determining which bin to add $1$ to.
+
+```python
+for _ in range(total_sim):  
+    x = NightSim.NightSim(bonnie_ai, chica_ai)
+    visits = x.simulate()
+    
+    for time in visits[0]:
+	    bonnie_data[time - 1] += 1
+	for time in visits[1]:
+		chica_data[time - 1] += 1
+```
+
+The final part is to actually plot these graphs. For sake of brevity, I'm only showing the code made for Bonnie's graph. I promise the one for Chica is virtually identical with very minor changes made. Regardless, here is the code used to made the visit distribution.
+
+```python
+plt.figtext(0.144, 0.85, "# of Sims: " + str(total_sim), size=14)  
+plt.figtext(0.13,0.8, "Bonnie's AI: " + str(bonnie_ai), size=14)  
+plt.xlabel("Night Hour (0 = 12AM)", size=16)  
+plt.ylabel("Relative Frequency", size=16)  
+plt.ylim(0, max(bonnie_first_visits)*1.15)  
+plt.title("Bonnie's First Visit Distribution", size=20)  
+plt.bar(bonnie_mo, bonnie_first_visits, width=0.04)
+```
+
+Alright it's time to actually look at some graphs now. For each graph, the number of simulations and the AI value are labeled in the top left hand corner of the graph.
+
+##### Bonnie Visit Distribution
+| AI Values 0 and 1                             | AI Values 5 and 10                             | AI Values 15 and 20                            |
+| --------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
+| ![](images/visit_dist/bonnie0_visit_dist.png) | ![](images/visit_dist/bonnie5_visit_dist.png)  | ![](images/visit_dist/bonnie15_visit_dist.png) |
+| ![](images/visit_dist/bonnie1_visit_dist.png) | ![](images/visit_dist/bonnie10_visit_dist.png) | ![](images/visit_dist/bonnie20_visit_dist.png) |
+
+##### Chica Visit Distribution
+| AI Values 0 and 1                            | AI Values 5 and 10                            | AI Values 15 and 20                           |
+| -------------------------------------------- | --------------------------------------------- | --------------------------------------------- |
+| ![](images/visit_dist/chica0_visit_dist.png) | ![](images/visit_dist/chica5_visit_dist.png)  | ![](images/visit_dist/chica15_visit_dist.png) |
+| ![](images/visit_dist/chica1_visit_dist.png) | ![](images/visit_dist/chica10_visit_dist.png) | ![](images/visit_dist/chica20_visit_dist.png) |
+
+#### First Visit Distribution
+The other graph I wanted to look at purely for the sake of it is the distribution of the first time Bonnie and Chica show up at the door. It is very similar to the general visit distribution, but instead of looking at every time Bonnie or Chica show up at the door, we only care about the first time it happens. If Bonnie or Chica never show up at the door, then we don't have to add anything. Since the set up is the same, I used the same MO code that I used for the general visit distribution.
+
+```python
+MO = [i for i in range(1, 108)]  
+bonnie_mo = []  
+chica_mo = []  
+for i in range(1, 108):  
+    bonnie_mo.append(round(mo_to_hour(i, "b"), 2))  
+    chica_mo.append(round(mo_to_hour(i, "c"), 2))
+
+bonnie_first_visits = [0 for i in range(1, 108)]
+chica_first_visits = [0 for i in range(1, 108)]
+```
+
+The simulation code is different however. I still run it for $1,000,000$ simulations, but now we first have to check to see if there is at least one visit for both Bonnie and Chica, then simply add one to whichever MO bin it lands on. Like last time, since the MO's value is one more than it's index in the list, we can use it as a locator for finding it's bin.
+
+```python
+for _ in range(total_sim):  
+    x = NightSim.NightSim(bonnie_ai, chica_ai)
+    visits = x.simulate()  
+    
+    if (len(visits[0]) > 0):
+	    bonnie_first_visits[visits[0][0] - 1] += 1
+	if (len(visits[1]) > 0):
+		chica_first_visits[visits[1][0] - 1] += 1
+```
+
+Now that we have this data we can plot it, which I do using the code below. Like last time, this is just the code for Bonnie, as the code for Chica is remarkably similar.
+
+```python
+plt.figtext(0.131, 0.85, "# of Sims: " + str(total_sim), size=14)  
+plt.figtext(0.13,0.8, "Chica's AI: " + str(chica_ai), size=14)  
+plt.xlabel("Night Hour (0 = 12AM)", size=16)  
+plt.ylabel("Relative Frequency", size=16)  
+plt.ylim(0, max(chica_first_visits)*1.15)  
+plt.title("Chica's First Visit Distribution", size=20)  
+plt.bar(chica_mo, chica_first_visits, width=0.04)
+```
+
+Now it's time for the plots themselves! Truthfully, these are my favorite plots to look at, as for lower AI values, it is really obvious when the increase in the AI value happens.
+
+##### Bonnie's First Visit Distribution
+| AI Values 0 and 1                                         | AI Values 5 and 10                                         | AI Values 15 and 20                                        |
+| --------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
+| ![](images/first_visit_dist/bonnie0_first_visit_dist.png) | ![](images/first_visit_dist/bonnie5_first_visit_dist.png)  | ![](images/first_visit_dist/bonnie15_first_visit_dist.png) |
+| ![](images/first_visit_dist/bonnie1_first_visit_dist.png) | ![](images/first_visit_dist/bonnie10_first_visit_dist.png) | ![](images/first_visit_dist/bonnie20_first_visit_dist.png) |
+
+##### Chica's First Visit Distribution
+| AI Values 0 and 1                                        | AI Values 5 and 10                                        | AI Values 15 and 20                                       |
+| -------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------- |
+| ![](images/first_visit_dist/chica0_first_visit_dist.png) | ![](images/first_visit_dist/chica5_first_visit_dist.png)  | ![](images/first_visit_dist/chica15_first_visit_dist.png) |
+| ![](images/first_visit_dist/chica1_first_visit_dist.png) | ![](images/first_visit_dist/chica10_first_visit_dist.png) | ![](images/first_visit_dist/chica20_first_visit_dist.png) |
 
 ### Custom Night Graphs
 
