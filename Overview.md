@@ -256,16 +256,22 @@ plt.bar(bonnie_mo, bonnie_first_visits, width=0.04)
 Alright it's time to actually look at some graphs now. For each graph, the number of simulations and the AI value are labeled in the top left hand corner of the graph.
 
 ##### Bonnie Visit Distribution
-| AI Values 0 and 1                             | AI Values 5 and 10                             | AI Values 15 and 20                            |
-| --------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
-| ![](images/visit_dist/bonnie0_visit_dist.png) | ![](images/visit_dist/bonnie5_visit_dist.png)  | ![](images/visit_dist/bonnie15_visit_dist.png) |
-| ![](images/visit_dist/bonnie1_visit_dist.png) | ![](images/visit_dist/bonnie10_visit_dist.png) | ![](images/visit_dist/bonnie20_visit_dist.png) |
+|                   AI Value 0                   |                  AI Value1 1                   |
+| :--------------------------------------------: | :--------------------------------------------: |
+| ![](images/visit_dist/bonnie0_visit_dist.png)  | ![](images/visit_dist/bonnie1_visit_dist.png)  |
+|                   AI Value 5                   |                  AI Value 10                   |
+| ![](images/visit_dist/bonnie5_visit_dist.png)  | ![](images/visit_dist/bonnie10_visit_dist.png) |
+|                  AI Value 15                   |                  AI Value 20                   |
+| ![](images/visit_dist/bonnie15_visit_dist.png) | ![](images/visit_dist/bonnie20_visit_dist.png) |
 
 ##### Chica Visit Distribution
-| AI Values 0 and 1                            | AI Values 5 and 10                            | AI Values 15 and 20                           |
-| -------------------------------------------- | --------------------------------------------- | --------------------------------------------- |
-| ![](images/visit_dist/chica0_visit_dist.png) | ![](images/visit_dist/chica5_visit_dist.png)  | ![](images/visit_dist/chica15_visit_dist.png) |
-| ![](images/visit_dist/chica1_visit_dist.png) | ![](images/visit_dist/chica10_visit_dist.png) | ![](images/visit_dist/chica20_visit_dist.png) |
+|                  AI Value 0                   |                  AI Value 1                   |
+| :-------------------------------------------: | :-------------------------------------------: |
+| ![](images/visit_dist/chica0_visit_dist.png)  | ![](images/visit_dist/chica1_visit_dist.png)  |
+|                  AI Value 5                   |                  AI Value 10                  |
+| ![](images/visit_dist/chica5_visit_dist.png)  | ![](images/visit_dist/chica10_visit_dist.png) |
+|                  AI Value 15                  |                  AI Value 20                  |
+| ![](images/visit_dist/chica15_visit_dist.png) | ![](images/visit_dist/chica20_visit_dist.png) |
 
 #### First Visit Distribution
 The other graph I wanted to look at purely for the sake of it is the distribution of the first time Bonnie and Chica show up at the door. It is very similar to the general visit distribution, but instead of looking at every time Bonnie or Chica show up at the door, we only care about the first time it happens. If Bonnie or Chica never show up at the door, then we don't have to add anything. Since the set up is the same, I used the same MO code that I used for the general visit distribution.
@@ -310,40 +316,213 @@ plt.bar(chica_mo, chica_first_visits, width=0.04)
 Now it's time for the plots themselves! Truthfully, these are my favorite plots to look at, as for lower AI values, it is really obvious when the increase in the AI value happens.
 
 ##### Bonnie's First Visit Distribution
-| AI Values 0 and 1                                         | AI Values 5 and 10                                         | AI Values 15 and 20                                        |
-| --------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
-| ![](images/first_visit_dist/bonnie0_first_visit_dist.png) | ![](images/first_visit_dist/bonnie5_first_visit_dist.png)  | ![](images/first_visit_dist/bonnie15_first_visit_dist.png) |
-| ![](images/first_visit_dist/bonnie1_first_visit_dist.png) | ![](images/first_visit_dist/bonnie10_first_visit_dist.png) | ![](images/first_visit_dist/bonnie20_first_visit_dist.png) |
+|                         AI Value 0                         |                         AI Value 1                         |
+| :--------------------------------------------------------: | :--------------------------------------------------------: |
+| ![](images/first_visit_dist/bonnie0_first_visit_dist.png)  | ![](images/first_visit_dist/bonnie1_first_visit_dist.png)  |
+|                         AI Value 5                         |                        AI Value 10                         |
+| ![](images/first_visit_dist/bonnie5_first_visit_dist.png)  | ![](images/first_visit_dist/bonnie10_first_visit_dist.png) |
+|                        AI Value 15                         |                        AI Value 20                         |
+| ![](images/first_visit_dist/bonnie15_first_visit_dist.png) | ![](images/first_visit_dist/bonnie20_first_visit_dist.png) |
 
 ##### Chica's First Visit Distribution
-| AI Values 0 and 1                                        | AI Values 5 and 10                                        | AI Values 15 and 20                                       |
-| -------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------- |
-| ![](images/first_visit_dist/chica0_first_visit_dist.png) | ![](images/first_visit_dist/chica5_first_visit_dist.png)  | ![](images/first_visit_dist/chica15_first_visit_dist.png) |
-| ![](images/first_visit_dist/chica1_first_visit_dist.png) | ![](images/first_visit_dist/chica10_first_visit_dist.png) | ![](images/first_visit_dist/chica20_first_visit_dist.png) |
+|                        AI Value 0                         |                        AI Value 1                         |
+| :-------------------------------------------------------: | :-------------------------------------------------------: |
+| ![](images/first_visit_dist/chica0_first_visit_dist.png)  | ![](images/first_visit_dist/chica1_first_visit_dist.png)  |
+|                        AI Value 5                         |                        AI Value 10                        |
+| ![](images/first_visit_dist/chica5_first_visit_dist.png)  | ![](images/first_visit_dist/chica10_first_visit_dist.png) |
+|                        AI Value 15                        |                        AI Value 20                        |
+| ![](images/first_visit_dist/chica15_first_visit_dist.png) | ![](images/first_visit_dist/chica20_first_visit_dist.png) |
 
 ### Custom Night Graphs
 
-graphs that directly relate to the problem at hand
+Alright enough delay, let's take a look at the actual question at hand. We want to find the total time spent at the door for both Bonnie and Chica for all AI values (0 through 20). To do this, I created an empty list for each AI value. Then, I ran a simulation of $100,000$ nights per AI value (doing $1,000,000$ per AI value was taking way too long), and for each night, I appended the length of the visit list to get the total MOs spent at the door. After I plotted the distribution for each AI value in a box plot together to see the larger trend. The code for this can be seen below.
+
+```python
+bonnie_time_all_ai = dict(enumerate([[] for i in range(21)]))  
+chica_time_all_ai = dict(enumerate([[] for i in range(21)]))  
+  
+for i in range(21):  
+    for _ in range(total_sim):  
+        x = NightSim.NightSim(i, i)  
+        visits = x.simulate()  
+  
+        bonnie_time_all_ai[i].append(len(visits[0]))  
+        chica_time_all_ai[i].append(len(visits[1]))
+
+plt.figure(figsize=(10, 6))  
+plt.figtext(0.644, 0.85, "# of Sims: " + str(total_sim), size=14)  
+plt.xlabel("AI Value", size=16)  
+plt.ylabel("MOs Spent At Door", size=16)  
+plt.title("Chica's Time At Door For An AI Value", size=20)  
+plt.boxplot(chica_time_all_ai.values(), tick_labels=chica_time_all_ai.keys(), showmeans=True)
+  
+plt.figure(figsize=(10, 6))  
+plt.figtext(0.644, 0.85, "# of Sims: " + str(total_sim), size=14)  
+plt.xlabel("AI Value", size=16)  
+plt.ylabel("MOs Spent At Door", size=16)  
+plt.title("Bonnie's Time At Door For An AI Value", size=20)  
+plt.boxplot(bonnie_time_all_ai.values(), tick_labels=bonnie_time_all_ai.keys(), showmeans=True)
+```
+
+As a quick aside, I wanted to give a brief justification for what a box plot is. If you're familiar with this then you can skip the next little bit and jump straight to the graphs. Basically, it's a nice way to look at data in terms of it's quartiles. In the plot below, you can see a side by side of what the bar plot looks like along with it's equivalent box plot. The left tail represents the bottom 25% of the data, the middle rectangle represents the middle 50% of the data, and the right tail represents the top 25% of the data. The orange line represents the medium (middle of the data set), and the black dots represent outliers of the dataset.
+
+|              Bar Plot               |              Box Plot               |
+| :---------------------------------: | :---------------------------------: |
+| ![](images/bonnie_MO_at_door_1.png) | ![](images/bonnie_MO_at_door_3.png) |
+
+Hopefully the side-by-side helps with the comparison between the two (keep in mind the x-axis for the box plot is 10 movement opportunities bigger than the bar plot because the simulation happened to role a *really* unlucky situation where Bonnie camped at the door for a while). The two graphs represent mostly the same thing, just a different way of representing it. For the final graphs I will use a vertical version, where instead of the left side of the plot being 0, the bottom is 0 instead. Why I am choosing to do this will be more clear soon. Example is shown below.
+
+|         Horizontal Box Plot         |          Vertical Box Plot          |
+| :---------------------------------: | :---------------------------------: |
+| ![](images/bonnie_MO_at_door_3.png) | ![](images/bonnie_MO_at_door_2.png) |
+
+Alright enough of that, let's see the actual plots. As mentioned I used the vertical box plot because it makes more sense to me to have the x - axis be the AI values. For these plots, I also added the mean to the graph, which is noted by the center of the green triangles. Lastly, I couldn't decide if I liked with outliers or without outliers more, so I decided to make a graph for both.
+
+#### Bonnie's Time Spent At Door For Each AI Value
+|         Without Outliers         |              With Outliers               |
+| :------------------------------: | :--------------------------------------: |
+| ![](images/bonnie_door_dist.png) | ![](images/bonnie_door_dist_outlier.png) |
+Since it is kind of difficult to see, I also wanted to list the exact means for each of the AI values, which is found in the table below.
+
+| AI Value | Mean MO Spent At Door |
+| -------- | --------------------- |
+| 0        | 5.16489               |
+| 1        | 9.07587               |
+| 2        | 11.64847              |
+| 3        | 13.11544              |
+| 4        | 13.92042              |
+| 5        | 14.40443              |
+| 6        | 14.7232               |
+| 7        | 14.94985              |
+| 8        | 15.12798              |
+| 9        | 15.26798              |
+| 10       | 15.40443              |
+| 11       | 15.46504              |
+| 12       | 15.55292              |
+| 13       | 15.60678              |
+| 14       | 15.65878              |
+| 15       | 15.72077              |
+| 16       | 15.75654              |
+| 17       | 15.78552              |
+| 18       | 15.81775              |
+| 19       | 15.83322              |
+| 20       | 15.87482              |
+
+#### Chica's Time Spent At Door For Each AI Value
+|        Without Outliers         |              With Outliers               |
+| :-----------------------------: | :--------------------------------------: |
+| ![](images/chica_door_dist.png) | ![](images/chica_door_dist_outliers.png) |
+Since it is kind of difficult to see, I also wanted to list the exact means for each of the AI values, which is found in the table below.
+
+| AI Value | Mean MO Spent At Door |
+| -------- | --------------------- |
+| 0        | 0.59368               |
+| 1        | 3.0403                |
+| 2        | 4.92326               |
+| 3        | 5.97047               |
+| 4        | 6.52226               |
+| 5        | 6.873                 |
+| 6        | 7.11486               |
+| 7        | 7.30053               |
+| 8        | 7.42895               |
+| 9        | 7.52868               |
+| 10       | 7.58297               |
+| 11       | 7.66861               |
+| 12       | 7.71179               |
+| 13       | 7.77222               |
+| 14       | 7.78996               |
+| 15       | 7.82894               |
+| 16       | 7.86401               |
+| 17       | 7.89597               |
+| 18       | 7.91724               |
+| 19       | 7.94253               |
+| 20       | 7.94869               |
 
 ## Analysis of Results
 
-what the title says stupid
+This section will only be an analysis of the problem at hand. While I think there are fun parts to analyze for the other graphs I made, I'm going to stick with the total MOs spent at the doors. The first part I want to look at is the averages for both Bonnie and Chica. Both Bonnie and Chica's median and mean increases as the AI level increase, with the later strictly increasing.
 
-### What I think this says
+### Median
+Starting with the median first, Bonnie's median stays at a constant 16 MOs from AI 14 and above while Chica's median stays at a constant 8 MOs from AI 15 and above. Both of these values make sense, especially if you look at the steadily increasing mean. Since the median is the data point in the middle of the data, it has to take the value of a data point, and because all data points integers, the median can only increase in integer steps. It's also worth noting that until the median levels out, it is consistently lower than the mean, indicated a left-skewed set of data. This also makes sense as since the median and mean are much closer to the minimum (0 MOs spent at the door) than the maximum (104 MOs spent at the door). That's about all I have to say about the median for both Bonnie and Chica. Ordinarily I would do a t-test to determine if the two values are statistically different, but for the higher AI values, they are quite literally the same.
 
-title. read it dummy
+### Mean
+Alright so the mean is a lot more tricky. As mentioned before, the mean MO spent at the door for both Bonnie and Chica strictly increases as the AI value increases, with a maximum at an AI value of 20. This seems to be a strong case that an AI value of 20 is the most difficult for this reason. However, before coming to any conclusions, we need to make sure that these values are statistically significant from each other and not due to random variations. To do this, I used a t-test between the data sets with an AI value of 19 and 20 for both Bonnie and Chica. The reason for this and not something like an ANOVA test is because if an AI value of 20 is different than 19, then clearly it will be different from all AI values below 19. The t-test will generate a p-value, which means the probability that the different in the means happens by random chance. This value will never be exactly 0, so to determine if the two values are statistically significant, a cut-off value is used, usually designated with the Greek letter $\alpha$. Personally, I like to use $\alpha = 0.01$, which means our p-value needs to be below $0.01$ for the difference to be significant. Anyway enough delay, for the data that was represented in the results section, the results are as follows.
+
+$$
+\begin{aligned}
+\text{P Value for Bonnie MO Means (AI 19 and 20)} &= 0.000653219009700692 \\
+\text{P Value for Chica MO Means (AI 19 and 20)} &= 0.7368695937071894
+\end{aligned}
+$$
+
+Bonnie's p-value is much lower than what we need it to be, by almost a factor of 100. Chica's p-value on the other hand is very high being no where close to out $0.01$ cut-off. Effectively, this means that the difference between the mean time spent at the door is very significant for Bonnie when switching between an AI of 19 and 20, however, statistically, there is no difference between 19 and 20 for Chica. This can be seen by looking at a 99% confidence interval around the means which shows significant overlap between the values.
+
+| AI Value | Bonnie / Chica | Mean MO at Door |               99% Confidence Interval               |
+| :------: | :------------: | :-------------: | :-------------------------------------------------: |
+|    19    |     Bonnie     |    15.846519    | $$ 15.829116707882946 < \mu < 15.857843292117053 $$ |
+|    19    |     Chica      |    7.936391     | $$ 7.918399650257855 < \mu < 7.9612203497421445 $$  |
+|    20    |     Bonnie     |    15.875243    | $$ 15.857581343718456 < \mu < 15.885038656281543 $$ |
+|    20    |     Chica      |     7.95256     |  $$ 7.919435203463387 < \mu < 7.961284796536614 $$  |
+
+Ordinarily, this is where a general analysis would end, but since we can generate however many cycles of simulations we want, it is very easy to keep re-rolling the simulation with different random seeds until we get a p-value that we want. For example, while testing the plots, I found the following p-values for a differently generated set of data.
+
+$$
+\begin{aligned}
+\text{2nd Run: P Value for Bonnie MO Means (AI 19 and 20)} &= 0.000769368789118122 \\
+\text{2nd Run: P Value for Chica MO Means (AI 19 and 20)} &= 0.039834379715173965
+\end{aligned}
+$$
+
+While this run tells a very similar story for Bonnie, it doesn't for Chica. Now Chica is below our cut-off value and is thus significantly different between an AI value of 19 and 20. While it is significantly more difficult, I have seen at least one instance of Bonnie's p-value also not meeting the cut-off as well.
+
+So what does this mean? Are these two values significantly different? The honest answer is: I don't know. In general, re-rolling randomness until you get the result you want to see is a classic example of cherry picking, which is something I don't want to do. That being said, Chica's status of significantly different flip flops between random seeds almost like a coin toss, so it's not *completely* far-fetched to indicate that it is significantly different. In general, this is where things would end, if we didn't have the option of increasing the number of simulations we can generate. For all 4 p-values calculated above, I was using a total simulation count of $100,000$ because it was lumped in with all 21 different AI values. However, if we focus on just 19 and 20, we can finish $1,000,000$ and beyond in a *reasonable* time (this is where my choice of python is biting me in the butt). Anyway, the means calculated for $1,000,000$ simulations along with their confidence interval and p-values for the new t-test are below.
+
+| AI Value | Bonnie / Chica | Mean MO at Door |               99% Confidence Interval               |
+| :------: | :------------: | :-------------: | :-------------------------------------------------: |
+|    19    |     Bonnie     |    15.846519    | $$ 15.841964953812903 < \mu < 15.851073046187098 $$ |
+|    19    |     Chica      |    7.936391     |  $$ 7.929613037475604 < \mu < 7.943168962524397 $$  |
+|    20    |     Bonnie     |    15.875243    | $$ 15.870895798621266 < \mu < 15.879590201378733 $$ |
+|    20    |     Chica      |     7.95256     |   $$ 7.94595275403383 < \mu < 7.95916724596617 $$   |
+
+$$
+\begin{aligned}
+\text{P Value for Bonnie MO Means (AI 19 and 20)} &= 6.918448031273796e-32 \\
+\text{P Value for Chica MO Means (AI 19 and 20)} &= 1.0824275002262571e-05
+\end{aligned}
+$$
+
+Now both p-values are well under our $0.01$ cut-off, by a couple order of magnitudes. It took increasing the total sample size by a couple orders of magnitude, or many in the case for Bonnie. Like last time, there are pretty big deviations in the p-value depending on the seed, so the ones that you're seeing are the result of running 5 different $1,000,000$ sized simulations and taking the simulation that contained the largest p-value. This was my attempt at getting to a pretty confident answer while accounting for the deviations in the p-values. 
+
+It should be noted that the data here are a different data set from what was seen in the results section, but behaves in a vastly similar way. I did not include the graphs for this as they look exactly the same, but just with much more data points. Mostly leaving this here, because this action would *definitely* not fly in a peer reviewed paper, but to be honest, I have no idea the proper actions outside of what I chose to do since the data sets are generated and not taken from a population. 
+
+### Outliers
+This will be less formal, but something I wanted to touch on. I'll talk a bit more about the general implied difficulty of this, but I wanted to at least mention before I get too far. The trend of the outliers for the data slowly get more compressed as the AI value for both Bonnie and Chica increase. The outliers themselves seem to peak for the lower AI values, which makes sense to some extent. The AI values are low enough where it is easier for Bonnie and Chica to stay at the door, but not low enough for them to never get there. In fact, the longest time spent at the door happens when Bonnie's AI value is at 3 and when Chica's AI value is at 2. In general, it also happens that the highest chance of getting an animatronic to stay at the door for long periods of time only happens at low AI values. For example, while they are outliers, the only AI values that have nights where Bonnie or Chica remain at the door for longer than 40 MOs are below 5, while this effectively never happens for larger AI values (keep in mind, these outliers were found when doing $100,000$ simulations for each AI value).
 
 ### Pitfalls of Simulation
+Believe it or not, this simulation isn't perfect. These pitfalls of this simulation are a mix of changes I either do not know how to fix or was too lazy to implement.
 
-Yea okay whatever
+#### Game vs Python Randomness
+I have no idea how this one is impacted on the simulation, but it should be noted that the random numbers generated by Python is not exactly the same as Click Team Fusion. Technically, this could deviate in a number of ways, but I don't know nearly enough about random numbers in Click Team Fusion to say how it is impacted. If I had to guess, it is mostly similar to each other, but it's at least something to keep in mind.
+
+#### Movement Delay Glitch
+I knew about this before making the simulation, but chose not to implement it because I was lazy. Basically, in Five Nights at Freddy's Bonnie and Chica share the same variable that stores the random number that chooses whether they move or not. The program first calculates Chica's move and then overwrites the value with Bonnie's move. This is fine for a vast majority of the program, but for times where Bonnie's and Chica's MO overlap on intervals smaller than a frame, if Chica has a successful movement opportunity, then the program won't have time to calculate Bonnie's and thus Bonnie doesn't move. You can see this yourself if you set both Bonnie and Chica to an AI value of 20. Theoretically, both Bonnie and Chica will move on the first MO, but because of this glitch, Chica will move forward and Bonnie will stay on stage. I am fairly certain that this glitch will only happen on the first MO, but nonetheless I was too lazy to implement it and the plots don't show this. That begin said, I doubt it would change much, but it would destroy the fact that Bonnie and Chica's movements are independent of each other which would be a monumental hassle, so I assumed otherwise (especially since it's effectively true, kind of like ignoring air friction).
+
+#### Difficulty
+This is less about the simulation and more about the premise behind it. Throughout this entire process, I assumed that the most difficult setting is when Bonnie and Chica are at your door, but I don't think this is entirely true. For example, if Bonnie and Chica rush to your door as soon as possible and stay there, the optimal play is to just close the doors and wait. That doesn't scream difficulty to me, more so just putting you in an impossible situation. But as mentioned before, for higher AI values, if you know they're going to leave immediately, what's the difficulty if they're so predictable? All this is to say, I don't think this is a perfect measure of difficulty, and maybe we're barking up the wrong tree because the difficulty doesn't actually change with AI value when you get high enough. The strategy for beating the night doesn't change, just how lucky you are to finish. That being said, I do think if you're going to try and measure the difficulty then this is the best way to do it, but I completely understand how people would say otherwise.
 
 ## Conclusion
 
-The end
+I had a lot of fun on this investigation and learned a great deal about the original FNAF game than I originally anticipated. Truthfully, I went in thinking (and hoping) that the most difficult AI value would in fact be 19 or 18 or something similar, but I believe that the results show otherwise. I mentioned this in the [Difficulty](#difficulty) section, but I personally believe that this is one of the better ways to measure difficulty for this game (if it can be measured). I think the *best* way would be to be combining time spent at the door along with frequent trips to the door, but I daresay the end result would be the same. The results show that the hardest measurable AI value for both Bonnie and Chica ends up being 20 for both of them, even if the difference between 20 and 19 is so miniscule that we had to greatly increase the number of simulated nights to show it. 
+
+Besides the pitfalls mentioned previously, I do want to at least point out that lower AI values *do* have a higher chance of producing situations. Looking at the plots, the outliers for an AI value of 19 reach higher than the highest outliers for an AI value of 20. However, I think it's a bit unfair to focus on the outliers for examples like this, as technically, you could argue that an AI value of 2 for Bonnie and 3 for Chica would be the hardest as they have the highest chance out of all to have insane times spent at the door. Moreover, an AI value of 19 has a much higher chance of rolling lower MOs spent at the door than an AI value of 20, as the lower outliers for 19 are smaller than the lowest outlier for 20. All this is to say that, on average, an AI value for 20 (for both Bonnie and Chica) shows the highest mean time spent at the door, but also the most consistent. Lowering the AI value will not increase the average time spent at the door, just increase your likelihood of having more difficult nights, but will also increase your likelihood of having easier nights. Does that make it more difficult? In my personal opinion no (mostly due to the mean), but at the end of the day, it's entirely up to you.
 
 ## References
 
-These will be links for now until I figure out how I want to properly cite them
+### Python Libraries
+1. Matplotlib for plots: [J. D. Hunter, "Matplotlib: A 2D Graphics Environment", Computing in Science & Engineering, vol. 9, no. 3, pp. 90-95, 2007](https://doi.org/10.1109/MCSE.2007.55)
+2. Numpy for math: Harris, C.R., Millman, K.J., van der Walt, S.J. et al. _Array programming with NumPy_. Nature 585, 357–362 (2020). DOI: [10.1038/s41586-020-2649-2](https://doi.org/10.1038/s41586-020-2649-2). ([Publisher link](https://www.nature.com/articles/s41586-020-2649-2))
+3. Scipy for statistics: Pauli Virtanen, Ralf Gommers, Travis E. Oliphant, Matt Haberland, Tyler Reddy, David Cournapeau, Evgeni Burovski, Pearu Peterson, Warren Weckesser, Jonathan Bright, Stéfan J. van der Walt, Matthew Brett, Joshua Wilson, K. Jarrod Millman, Nikolay Mayorov, Andrew R. J. Nelson, Eric Jones, Robert Kern, Eric Larson, CJ Carey, İlhan Polat, Yu Feng, Eric W. Moore, Jake VanderPlas, Denis Laxalde, Josef Perktold, Robert Cimrman, Ian Henriksen, E.A. Quintero, Charles R Harris, Anne M. Archibald, Antônio H. Ribeiro, Fabian Pedregosa, Paul van Mulbregt, and SciPy 1.0 Contributors. (2020) **SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python**. _Nature Methods_, 17(3), 261-272. DOI: [10.1038/s41592-019-0686-2](https://doi.org/10.1038/s41592-019-0686-2)
 
 ### Images
+1. 
 
